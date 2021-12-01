@@ -1,22 +1,27 @@
 import os
+from waitress import serve
 from flask import Flask
 from flask import Response
 from flask import request
 from cube.api import Cube
 
 app = Flask(__name__)
-lang = os.getenv('MODEL_LANGUAGE')
 
-print('Initializing NLP-Cube...')
 
-cube = Cube(verbose=True)
+def initialize_cube():
+    print('Initializing NLP-Cube...')
+    cubeObj = Cube(verbose=True)
 
-print('NLP-Cube initialized.')
-print('Loading language model for [%s]...' % lang)
+    print('NLP-Cube initialized.')
+    return cubeObj
 
-cube.load(lang, device='cpu')
 
-print('Language model loaded.')
+def load_language_model(language):
+
+    print('Loading language model for [%s]...' % language)
+
+    cube.load(language, device='cpu')
+    print('Language model loaded.')
 
 
 @app.route('/nlp', methods=['POST'])
@@ -28,4 +33,9 @@ def process_text():
 
 
 if __name__ == '__main__':
-    app.run()
+
+    lang = os.getenv('MODEL_LANGUAGE')
+    cube = initialize_cube()
+    load_language_model(lang)
+
+    serve(app, host="0.0.0.0", port=8000)
