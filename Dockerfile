@@ -6,7 +6,7 @@ COPY . /app
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
-EXPOSE 5000
+EXPOSE 8080
 
 ENTRYPOINT ["python3"]
-CMD ["app.py", "--host", "0.0.0.0"]
+CMD ["app.py"]
